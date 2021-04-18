@@ -1,184 +1,212 @@
-import { useEffect, useState } from 'react';
+import { useReducer, useEffect } from 'react';
+
+import {
+  PLAYERS_MAX,
+  PLAYERS_MIN,
+  NAME_MAX,
+} from './constants';
+
+import {
+  getCharacters,
+  getDefaultPlayers,
+} from './utils';
 
 import './App.scss';
 
 
-const CHARACTERS = [
-  'Bangalore',
-  'Bloodhound',
-  'Caustic',
-  'Crypto',
-  'Fuse',
-  'Gibraltar',
-  'Horizon',
-  'Lifeline',
-  'Loba',
-  'Mirage',
-  'Octane',
-  'Pathfinder',
-  'Rampart',
-  'Revenant',
-  'Wattson',
-  'Wraith',
-];
-
-
-function getCharacters(count) {
-  let characters = [];
-  let pool = [...CHARACTERS];
-
-  if (count > pool.length) count = pool.length;
-
-  for (let i = 0; i < count; i++) {
-    const rand = Math.floor(Math.random() * pool.length);
-    characters.push(pool.splice(rand, 1));
-  }
-
-  return characters;
+function PlayerList(props) {
+  return (
+    <div className="players-list">
+      {props.children}
+    </div>
+  )
 }
 
-
-function PlayerInput(props) {
-  function handleChange(e) {
-    props.handleChange(e.target.value);
-  }
-
-  function handleFocus(e) {
+function Player(props) {
+  function onFocus(e) {
     e.target.select();
+    if ('onFocus' in props) props.onFocus(e);
   }
 
+  if (!props.isVisible) return null;
+
   return (
-    <input
-      onChange={handleChange}
-      onFocus={handleFocus}
-      type="text"
-      value={props.value}
-    />
+    <div className="players-list-item">
+      {props.showName &&
+        <span className="players-list-item-name">
+          <input
+            maxLength={NAME_MAX}
+            onChange={props.onChange}
+            onFocus={onFocus}
+            type="text"
+            value={props.value}
+          />
+        </span>
+      }
+      <span className="players-list-item-character">
+        {props.character}
+      </span>
+    </div>
   );
 }
 
 
-function ClearHistoryButton(props) {
+function HistoryPlayer(props) {
   return (
-    <button onClick={props.handleClick}>
-      Clear History
-    </button>
-  );
-}
-
-
-function RandomButton(props) {
-  return (
-    <button onClick={props.handleClick}>
-      Randomize
-    </button>
-  );
-}
-
-function ResetPlayersButton(props) {
-  return (
-    <button onClick={props.handleClick}>
-      Reset Players
-    </button>
-  );
+    <div className="history-player">
+      <span className="history-player-name">
+        {props.player}
+      </span>
+      <span className="history-player-character">
+        {props.character}
+      </span>
+    </div>
+  )
 }
 
 
 /**
- * TODO: Safer local storage get/set.
- * TODO: Dynamic player count (1-3?)
+ * TODO: indicate "current" or hide "current"
  */
+function HistoryItem(props) {
+  const displayCount = Array.from(Array(props.state.count).keys());
+  return (
+    <div className="history-item">
+      {displayCount.map((i) => {
+        return (
+          <HistoryPlayer
+            character={props.state.characters[i]}
+            player={props.state.players[i]}
+          />
+        );
+      })}
+    </div>
+  )
+}
+
+
+const initialState = {
+  characters: getCharacters(PLAYERS_MAX),
+  count: PLAYERS_MAX,
+  history: [],
+  players: getDefaultPlayers(PLAYERS_MAX),
+};
+
+
+function init(initialState) {
+  const storageState = JSON.parse(localStorage.getItem('state'));
+  const initState = storageState || initialState;
+  return {...initState, history: [initState]};
+}
+
+
+function reducer(state, action) {
+  let characters = [...state.characters];
+  let history = [...state.history];
+  let players = [...state.players];
+
+  switch (action.type) {
+    case 'clearHistory':
+      return {...state, history: [state]};
+
+    case 'count':
+      const count = parseInt(action.payload);
+      history[history.length - 1].count = count;
+      return {...state, history, count}
+
+    case 'player':
+      players[action.id] = action.payload;
+      history[history.length - 1].players = players;
+      return {...state, history, players}
+
+    case 'rando':
+      const randoState = {...state,
+        characters: getCharacters(PLAYERS_MAX)
+      };
+      return {...randoState,
+        history: [...randoState.history, {...randoState, history: []}],
+      };
+
+    case 'reset':
+      const resetState = {...initialState, characters};
+      return {...resetState, history: [{...resetState}] }
+
+    default:
+      throw new Error();
+  }
+}
+
+
 function App(props) {
-  const playerCount = 3;
-
-  const p1Default = 'Player1';
-  const p2Default = 'Player2';
-  const p3Default = 'Player3';
-
-  const [p1, setP1] = useState(localStorage.getItem('p1') || p1Default);
-  const [p2, setP2] = useState(localStorage.getItem('p2') || p2Default);
-  const [p3, setP3] = useState(localStorage.getItem('p3') || p3Default);
-
-  const [
-    characters,
-    setCharacters
-  ]= useState(getCharacters(playerCount));
-
-  const [history, setHistory] = useState(
-    JSON.parse(localStorage.getItem('history')) || []
-  );
-
-  function randomizeCharacters() {
-    const newCharacters = getCharacters(playerCount);
-    setCharacters(newCharacters);
-    setHistory([newCharacters, ...history]);
-  }
-
-  function clearHistory() {
-    setHistory([characters]);
-  }
-
-  function resetPlayers() {
-    setP1(p1Default);
-    setP2(p2Default);
-    setP3(p3Default);
-  }
-
-  // Run once! (hack; replace)
-  useEffect(() => {
-    setHistory([characters, ...history]);
-    // eslint-disable-next-line
-  }, []);
+  const [state, dispatch] = useReducer(reducer, initialState, init);
 
   useEffect(() => {
-    localStorage.setItem('history', JSON.stringify(history));
-    localStorage.setItem('p1', p1);
-    localStorage.setItem('p2', p2);
-    localStorage.setItem('p3', p3);
-  }, [history, p1, p2, p3]);
+    localStorage.setItem('state', JSON.stringify(state));
+  });
+
+  function onChangePlayerCount(e) {
+    dispatch({
+      payload: e.target.value,
+      type: 'count',
+    });
+  }
+
+  function onChangePlayerName(e, i) {
+    dispatch({
+      id: i,
+      payload: e.target.value,
+      type: 'player'
+    });
+  }
+
+  function onClickRandom(e) { dispatch({type: 'rando'}); }
+  function onClickReset(e) { dispatch({type: 'reset'}); }
 
   return (
     <div className="App">
-      <ResetPlayersButton handleClick={resetPlayers} />
-      <h1>
-        <PlayerInput handleChange={setP1} value={p1} />
-        <span> : {characters[0]}</span>
-      </h1>
-      <h1>
-        <PlayerInput handleChange={setP2} value={p2} />
-        <span> : {characters[1]}</span>
-      </h1>
-      <h1>
-        <PlayerInput handleChange={setP3} value={p3} />
-        <span> : {characters[2]}</span>
-      </h1>
 
-      <RandomButton handleClick={randomizeCharacters} />
+      <p>
+        <label htmlFor="idPlayerCount">Players:</label>
+        <input
+          id="idPlayerCount"
+          max={PLAYERS_MAX}
+          min={PLAYERS_MIN}
+          onChange={onChangePlayerCount}
+          type="number"
+          value={state.count}
+        />
+      </p>
+
+      <p>
+        <button onClick={onClickRandom}>Randomize</button>
+        <button onClick={onClickReset}>Reset</button>
+      </p>
+
+      <PlayerList>
+        {state.players.map((player, i) => {
+          return (
+            <Player
+              key={i}
+              onChange={(e) => {onChangePlayerName(e, i)}}
+              character={state.characters[i]}
+              isVisible={i <= state.count - 1}
+              showName={true}
+              value={player}
+            />
+          )
+        })}
+      </PlayerList>
 
       <h3>History</h3>
-      <ClearHistoryButton handleClick={clearHistory} />
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>{p1}</th>
-            <th>{p2}</th>
-            <th>{p3}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((characters, index) => {
-            return (
-              <tr key={index}>
-                <td>{history.length - index}</td>
-                <td>{characters[0]}</td>
-                <td>{characters[1]}</td>
-                <td>{characters[2]}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <button onClick={(e) => dispatch({type: 'clearHistory'})}>
+        Clear History
+      </button>
+
+      <div className="history">
+        {state.history.slice().reverse().map((historyState, i) => {
+          return <HistoryItem key={i} state={historyState} />
+        })}
+      </div>
     </div>
   );
 }

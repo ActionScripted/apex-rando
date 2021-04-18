@@ -7,19 +7,8 @@ html, body {
   text-align: center;
 }
 
-table {
-  border-collapse: collapse;
-  border: 1px solid;
-  margin: 0 auto;
-
-  td,
-  th {
-    border: 1px solid;
-    padding: 0.25em 0.5em;
-  }
-}
-
 button {
+  /*
   background: #eee;
   border: none;
   border-radius: 2em;
@@ -33,31 +22,74 @@ button {
   &:focus {
     outline: 3px solid red;
   }
+  */
 }
 
-input[type=text] {
-  text-align: right;
+
+.players-list {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+  text-align: center;
   width: 100%;
 
-  &:active,
-  &:focus {
-    outline: 3px solid #fff;
+  &-item {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    flex: 1 1 auto;
+    width: 100%;
+
+    &-character,
+    &-name,
+    &-name input {
+      border: none;
+      color: #fff;
+      display: block;
+      font-size: 1.5em;
+      text-align: center;
+      width: 100%;
+    }
+
+    input {
+      background: none;
+      box-sizing: border-box;
+      font-size: 0.75em;
+      line-height: 1;
+      margin: 0;
+      padding: 0;
+    }
+
+    &-character {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
   }
 }
 
-h1 {
-  display: flex;
-  text-align: left;
 
-  > * {
-    background: none;
-    border: none;
-    color: #fff;
-    flex: 1 1 auto;
-    font-size: inherit;
-    font-weight: bold;
-    outline: none;
-    padding: 0.125em 0.25em;
-    width: 50% !important;
+.history {
+  &-item {
+    display: flex;
+    justify-content: center;
+    margin: 1em 0;
+    width: 100%;
+  }
+
+  &-player {
+    border: 1px solid #ddd;
+    flex: 0 1 auto;
+    margin: 0;
+    padding: 0.25em;
+    width: 100%;
+
+    &-character,
+    &-name {
+      display: block;
+    }
+
+    &-character {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
   }
 }
