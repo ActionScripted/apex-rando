@@ -1,10 +1,15 @@
-html, body {
+html {
+  box-sizing: border-box;
   background: #333;
   color: #eee;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 button {
@@ -28,6 +33,7 @@ button {
 
 .players-list {
   display: flex;
+  flex-flow: row nowrap;
   justify-content: center;
   margin: 1em 0;
   text-align: center;
@@ -51,6 +57,7 @@ button {
     }
 
     input {
+      color: #ddd;
       background: none;
       box-sizing: border-box;
       font-size: 0.75em;
@@ -61,6 +68,7 @@ button {
 
     &-character {
       font-weight: bold;
+      letter-spacing: 0.0625em;
       text-transform: uppercase;
     }
   }
@@ -68,28 +76,92 @@ button {
 
 
 .history {
+  margin: 1em 0;
+
   &-item {
+    align-content: stretch;
+    align-items: stretch;
+    border: 1px solid #666;
+    border-bottom: 0;
+    font-size: 0.75em;
     display: flex;
     justify-content: center;
-    margin: 1em 0;
+    margin: 0;
+    position: relative;
     width: 100%;
+
+    @media (min-width: 720px) {
+      font-size: 0.85em;
+    }
+
+    &:last-child {
+      border: 1px solid #666;
+    }
+
+    > * + * {
+      border-left: 1px solid #666;
+    }
+
+    &.is-current {
+      font-style: italic;
+      opacity: 0.5;
+      padding-top: 19px;
+      margin: 1em 0 0;
+
+      &::before {
+        background: #222;
+        color: #888;
+        content: 'Current';
+        left: 0;
+        line-height: 18px;
+        border-bottom: 1px solid #444;
+        position: absolute;
+        right: 0;
+        text-indent: 3em;
+        top: 0;
+        font-size: 0.8em;
+        letter-spacing: 0.125em;
+        width: auto;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  &-number {
+    align-items: center;
+    background: #222;
+    display: flex;
+    flex: 0 1 auto;
+    padding: 0 0.5em;
+    text-align: center;
+
+    &-text {}
   }
 
   &-player {
-    border: 1px solid #ddd;
     flex: 0 1 auto;
     margin: 0;
-    padding: 0.25em;
+    padding: 0.5em 0.25em;
+    min-width: 30%;
     width: 100%;
 
     &-character,
     &-name {
       display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
     }
 
     &-character {
       font-weight: bold;
+      letter-spacing: 0.0625em;
       text-transform: uppercase;
+    }
+
+    &-name {
+      color: #ccc;
+      font-size: 0.85em;
     }
   }
 }
