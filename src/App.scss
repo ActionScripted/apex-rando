@@ -13,31 +13,69 @@ html {
 }
 
 button {
-  /*
-  background: #eee;
-  border: none;
-  border-radius: 2em;
-  box-shadow:
-    0 0 0 2px green,
-    0 0 0 4px blue;
-  color: #332;
-  outline: none;
-  padding: 0.5em 1em;
+}
 
-  &:focus {
-    outline: 3px solid red;
+
+.history,
+.stats {
+  margin: 2em 0;
+
+  &-title {
+    align-items: center;
+    background: #222;
+    border: 1px solid #666;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 0.5em;
+    margin: 0 0 -1px 0;
+
+    button {
+      background: #333;
+      border-radius: 10px;
+      border: 0;
+      color: #ccc;
+      cursor: pointer;
+      height: auto;
+      outline: none;
+      padding: 0.25em .75em;
+      width: auto;
+
+      &:focus,
+      &:hover {
+        box-shadow: 0 0 0 2px #666;
+      }
+
+      &:active{
+        box-shadow: 0 0 0 2px #fff;
+        color: #fff;
+      }
+    }
+
+    &-clear,
+    &-text {
+      margin: 0;
+      padding: 0;
+    }
+
+    &-text {}
+    &-clear {}
   }
-  */
 }
 
 
 .players-list {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
+  font-size: 0.85em;
   justify-content: center;
   margin: 1em 0;
   text-align: center;
   width: 100%;
+
+  @media (min-width: 720px) {
+    flex-flow: row nowrap;
+    font-size: 1.125em;
+  }
 
   &-item {
     border: 1px solid #ddd;
@@ -75,15 +113,52 @@ button {
 }
 
 
+.stats {
+  ul {
+    display: flex;
+    flex-flow: row wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      border: 1px solid #666;
+      flex: 1 1 auto;
+      font-size: 0.825em;
+      color: #BBB;
+      font-weight: bold;
+      letter-spacing: 0.0625em;
+      padding: 0.25em 0.5em;
+      text-transform: uppercase;
+      width: 50%;
+    }
+  }
+}
+
 .history {
+  /**
+   * Todo:
+   *   - CSS grid and fixes for 10+ counts.
+   */
   margin: 1em 0;
+
+  &-title {
+    &-clear,
+    &-text {
+      margin: 0;
+      padding: 0;
+    }
+
+    &-text {}
+    &-clear {}
+  }
 
   &-item {
     align-content: stretch;
     align-items: stretch;
     border: 1px solid #666;
     border-bottom: 0;
-    font-size: 0.75em;
+    font-size: 0.65em;
     display: flex;
     justify-content: center;
     margin: 0;
@@ -95,7 +170,7 @@ button {
     }
 
     &:last-child {
-      border: 1px solid #666;
+      border-bottom: 1px solid #666;
     }
 
     > * + * {
@@ -106,7 +181,6 @@ button {
       font-style: italic;
       opacity: 0.5;
       padding-top: 19px;
-      margin: 1em 0 0;
 
       &::before {
         background: #222;

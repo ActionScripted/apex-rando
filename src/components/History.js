@@ -37,11 +37,15 @@ function HistoryItem(props) {
 export default function History(props) {
   return (
     <div className="history">
-      <h3>History</h3>
-
-      <button onClick={props.onClearHistory}>
-        Clear History
-      </button>
+      <div className="history-title">
+        <h3 className="history-title-text">History</h3>
+        <button
+          className="history-title-clear"
+          onClick={props.onClearHistory}
+        >
+          Clear History
+        </button>
+      </div>
 
       {props.history.slice().reverse().map((historyState, i) => {
         return (

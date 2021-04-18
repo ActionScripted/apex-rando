@@ -35,14 +35,22 @@ export default function Players(props) {
     <div className="players">
       <p>
         <label htmlFor="idPlayerCount">Players:</label>
-        <input
+        <select
           id="idPlayerCount"
-          max={props.max}
-          min={props.min}
           onChange={props.onChangePlayerCount}
-          type="number"
-          value={props.count}
-        />
+          defaultValue={props.count}
+        >
+          {Array.from(Array(props.max).keys()).map((count, i) => {
+            return (
+              <option
+                key={i}
+                value={count+1}
+              >
+                {count+1}
+              </option>
+            )
+          })}
+        </select>
       </p>
 
       <p>
