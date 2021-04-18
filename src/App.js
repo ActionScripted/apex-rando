@@ -17,12 +17,23 @@ import './App.scss';
 function PlayerList(props) {
   return (
     <div className="players-list">
-      {props.children}
+      {props.players.map((player, i) => {
+        return (
+          <PlayerListItem
+            key={i}
+            onChange={(e) => {props.onChangePlayerName(e, i)}}
+            character={props.characters[i]}
+            isVisible={i <= props.count - 1}
+            showName={true}
+            value={player}
+          />
+        )
+      })}
     </div>
   )
 }
 
-function Player(props) {
+function PlayerListItem(props) {
   function onFocus(e) {
     e.target.select();
     if ('onFocus' in props) props.onFocus(e);
@@ -51,33 +62,46 @@ function Player(props) {
 }
 
 
-function HistoryPlayer(props) {
+function History(props) {
   return (
-    <div className="history-player">
-      <span className="history-player-name">
-        {props.player}
-      </span>
-      <span className="history-player-character">
-        {props.character}
-      </span>
+    <div className="history">
+      <h3>History</h3>
+
+      <button onClick={props.onClearHistory}>
+        Clear History
+      </button>
+
+      {props.history.slice().reverse().map((historyState, i) => {
+        return (
+          <HistoryItem
+            key={i}
+            isCurrent={i === 0}
+            state={historyState}
+          />
+        )
+      })}
     </div>
   )
 }
 
 
-/**
- * TODO: indicate "current" or hide "current"
- */
 function HistoryItem(props) {
   const displayCount = Array.from(Array(props.state.count).keys());
+
+  if (props.isCurrent) return null;
+
   return (
     <div className="history-item">
       {displayCount.map((i) => {
         return (
-          <HistoryPlayer
-            character={props.state.characters[i]}
-            player={props.state.players[i]}
-          />
+          <div className="history-player">
+            <span className="history-player-name">
+              {props.state.players[i]}
+            </span>
+            <span className="history-player-character">
+              {props.state.characters[i]}
+            </span>
+          </div>
         );
       })}
     </div>
@@ -92,13 +116,11 @@ const initialState = {
   players: getDefaultPlayers(PLAYERS_MAX),
 };
 
-
 function init(initialState) {
   const storageState = JSON.parse(localStorage.getItem('state'));
   const initState = storageState || initialState;
   return {...initState, history: [initState]};
 }
-
 
 function reducer(state, action) {
   let characters = [...state.characters];
@@ -182,31 +204,17 @@ function App(props) {
         <button onClick={onClickReset}>Reset</button>
       </p>
 
-      <PlayerList>
-        {state.players.map((player, i) => {
-          return (
-            <Player
-              key={i}
-              onChange={(e) => {onChangePlayerName(e, i)}}
-              character={state.characters[i]}
-              isVisible={i <= state.count - 1}
-              showName={true}
-              value={player}
-            />
-          )
-        })}
-      </PlayerList>
+      <PlayerList
+        characters={state.characters}
+        count={state.count}
+        onChangePlayerName={onChangePlayerName}
+        players={state.players}
+      />
 
-      <h3>History</h3>
-      <button onClick={(e) => dispatch({type: 'clearHistory'})}>
-        Clear History
-      </button>
-
-      <div className="history">
-        {state.history.slice().reverse().map((historyState, i) => {
-          return <HistoryItem key={i} state={historyState} />
-        })}
-      </div>
+      <History
+        history={state.history}
+        onClearHistory={(e) => dispatch({type: 'clearHistory'})}
+      />
     </div>
   );
 }
