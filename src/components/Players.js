@@ -38,7 +38,7 @@ export default function Players(props) {
         <select
           id="idPlayerCount"
           onChange={props.onChangePlayerCount}
-          defaultValue={props.count}
+          value={props.count}
         >
           {Array.from(Array(props.max).keys()).map((count, i) => {
             return (
