@@ -17,6 +17,7 @@ button {
 
 
 .history,
+.players,
 .stats {
   margin: 2em 0;
 
@@ -63,51 +64,65 @@ button {
 }
 
 
-.players-list {
-  display: flex;
-  flex-flow: column nowrap;
-  font-size: 0.85em;
-  justify-content: center;
-  margin: 1em 0;
-  text-align: center;
-  width: 100%;
+.players {
+  &-controls {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0 auto 1em;
+    max-width: 36em;
+    width: 64%;
 
-  @media (min-width: 720px) {
-    flex-flow: row nowrap;
-    font-size: 1.125em;
+    button {
+      padding: 1em;
+    }
   }
 
-  &-item {
-    border: 1px solid #ddd;
-    padding: 0.5em;
-    flex: 1 1 auto;
+  &-list {
+    display: flex;
+    flex-flow: column nowrap;
+    font-size: 0.85em;
+    justify-content: center;
+    margin: 0;
+    text-align: center;
     width: 100%;
 
-    &-character,
-    &-name,
-    &-name input {
-      border: none;
-      color: #fff;
-      display: block;
-      font-size: 1.5em;
-      text-align: center;
+    @media (min-width: 720px) {
+      flex-flow: row nowrap;
+      font-size: 1.125em;
+    }
+
+    &-item {
+      border: 1px solid #ddd;
+      padding: 0.5em;
+      flex: 1 1 auto;
       width: 100%;
-    }
 
-    input {
-      color: #ddd;
-      background: none;
-      box-sizing: border-box;
-      font-size: 0.75em;
-      line-height: 1;
-      margin: 0;
-      padding: 0;
-    }
+      &-character,
+      &-name,
+      &-name input {
+        border: none;
+        color: #fff;
+        display: block;
+        font-size: 1.5em;
+        text-align: center;
+        width: 100%;
+      }
 
-    &-character {
-      font-weight: bold;
-      letter-spacing: 0.0625em;
-      text-transform: uppercase;
+      input {
+        color: #ddd;
+        background: none;
+        box-sizing: border-box;
+        font-size: 0.75em;
+        line-height: 1;
+        margin: 0;
+        padding: 0;
+      }
+
+      &-character {
+        font-weight: bold;
+        letter-spacing: 0.0625em;
+        text-transform: uppercase;
+      }
     }
   }
 }

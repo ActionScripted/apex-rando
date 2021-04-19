@@ -43,7 +43,7 @@ export default function History(props) {
           className="history-title-clear"
           onClick={props.onClearHistory}
         >
-          Clear History
+          Clear
         </button>
       </div>
 

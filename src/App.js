@@ -38,25 +38,29 @@ function reducer(state, action) {
   let players = [...state.players];
 
   switch (action.type) {
-    case 'clearHistory':
-      return {...state, history: [state]};
-
     case 'count':
       const count = parseInt(action.payload);
       history[history.length - 1].count = count;
       return {...state, history, count}
 
-    case 'player':
+    case 'history:clear':
+      return {...state, history: [state]};
+
+    case 'players:rename':
       players[action.id] = action.payload;
       history[history.length - 1].players = players;
       return {...state, history, players}
 
-    case 'rando':
-      const randoState = {...state,
+    case 'players:reset':
+      history[history.length - 1].players = initialState.players;
+      return {...initialState, characters, history: [...history] }
+
+    case 'players:shuffle':
+      const shuffleState = {...state,
         characters: getCharacters(PLAYERS_MAX)
       };
-      return {...randoState,
-        history: [...randoState.history, {...randoState, history: []}],
+      return {...shuffleState,
+        history: [...shuffleState.history, {...shuffleState, history: []}],
       };
 
     case 'reset':
@@ -72,9 +76,11 @@ function reducer(state, action) {
 function App(props) {
   const [state, dispatch] = useReducer(reducer, initialState, init);
 
-  console.log(state);
-
   useEffect(() => {
+    if (state.history.length == 50) {
+      alert('Yo, you should take a break.')
+    }
+
     localStorage.setItem('state', JSON.stringify(state));
   });
 
@@ -89,13 +95,13 @@ function App(props) {
     dispatch({
       id: i,
       payload: e.target.value,
-      type: 'player'
+      type: 'players:rename'
     });
   }
 
-  function onClearHistory(e) { dispatch({type: 'clearHistory'}) }
-  function onClickRandom(e) { dispatch({type: 'rando'}) }
-  function onClickReset(e) { dispatch({type: 'reset'}) }
+  function onClearHistory(e) { dispatch({type: 'history:clear'}) }
+  function onClickPlayerReset(e) { dispatch({type: 'players:reset'}) }
+  function onClickShuffle(e) { dispatch({type: 'players:shuffle'}) }
 
   return (
     <div className="App">
@@ -106,8 +112,8 @@ function App(props) {
         min={PLAYERS_MIN}
         onChangePlayerCount={onChangePlayerCount}
         onChangePlayerName={onChangePlayerName}
-        onClickRandom={onClickRandom}
-        onClickReset={onClickReset}
+        onClickShuffle={onClickShuffle}
+        onClickReset={onClickPlayerReset}
         players={state.players}
       />
 

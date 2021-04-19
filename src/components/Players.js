@@ -33,8 +33,7 @@ function PlayersItem(props) {
 export default function Players(props) {
   return (
     <div className="players">
-      <p>
-        <label htmlFor="idPlayerCount">Players:</label>
+      <div className="players-controls">
         <select
           id="idPlayerCount"
           onChange={props.onChangePlayerCount}
@@ -51,12 +50,22 @@ export default function Players(props) {
             )
           })}
         </select>
-      </p>
-
-      <p>
-        <button onClick={props.onClickRandom}>Randomize</button>
-        <button onClick={props.onClickReset}>Reset</button>
-      </p>
+        <button
+          className="players-title-random"
+          onClick={props.onClickShuffle}
+        >
+          Randomize
+        </button>
+      </div>
+      <div className="players-title">
+        <h3 className="players-title-text">Players</h3>
+        <button
+          className="players-title-reset"
+          onClick={props.onClickReset}
+        >
+          Reset
+        </button>
+      </div>
 
       <div className="players-list">
         {props.players.map((player, i) => {

@@ -29,7 +29,7 @@ export default function Stats(props) {
           className="stats-title-toggle"
           onClick={onClickStatsToggle}
         >
-          Toggle Stats
+          Show / Hide
         </button>
       </div>
       {visible &&
