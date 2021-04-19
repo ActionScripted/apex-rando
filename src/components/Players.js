@@ -33,7 +33,8 @@ function PlayersItem(props) {
 export default function Players(props) {
   return (
     <div className="players">
-      <div className="players-controls">
+      <div className="players-title">
+        <h3 className="players-title-text">Players</h3>
         <select
           id="idPlayerCount"
           onChange={props.onChangePlayerCount}
@@ -50,15 +51,6 @@ export default function Players(props) {
             )
           })}
         </select>
-        <button
-          className="players-title-random"
-          onClick={props.onClickShuffle}
-        >
-          Randomize
-        </button>
-      </div>
-      <div className="players-title">
-        <h3 className="players-title-text">Players</h3>
         <button
           className="players-title-reset"
           onClick={props.onClickReset}
@@ -80,6 +72,15 @@ export default function Players(props) {
             />
           )
         })}
+      </div>
+
+      <div className="players-controls">
+        <button
+          className="players-title-shuffle"
+          onClick={props.onClickShuffle}
+        >
+          Rando
+        </button>
       </div>
     </div>
   )

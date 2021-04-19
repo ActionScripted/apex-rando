@@ -12,14 +12,11 @@ html {
   box-sizing: inherit;
 }
 
-button {
-}
-
 
 .history,
 .players,
 .stats {
-  margin: 2em 0;
+  margin: 1.5em 0;
 
   &-title {
     align-items: center;
@@ -65,15 +62,25 @@ button {
 
 
 .players {
+  margin-top: 0;
+
   &-controls {
     display: flex;
     flex-flow: column nowrap;
-    margin: 0 auto 1em;
-    max-width: 36em;
-    width: 64%;
+    margin: 1em auto 0;
+    max-width: 28em;
+    width: 100%;
 
     button {
+      background: #fff;
+      border: 1px solid #ddd;
+      display: inline-block;
+      border-radius: 10px;
+      font-size: 1em;
+      font-weight: bold;
+      letter-spacing: 0.125em;
       padding: 1em;
+      text-transform: uppercase;
     }
   }
 

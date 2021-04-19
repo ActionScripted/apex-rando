@@ -20,6 +20,7 @@ import './App.scss';
 const initialState = {
   characters: getCharacters(PLAYERS_MAX),
   count: PLAYERS_MAX,
+  hasNagged: false,
   history: [],
   players: getDefaultPlayers(PLAYERS_MAX),
 };
@@ -45,6 +46,9 @@ function reducer(state, action) {
 
     case 'history:clear':
       return {...state, history: [state]};
+
+    case 'eggs:nag':
+      return {...state, hasNagged: true};
 
     case 'players:rename':
       players[action.id] = action.payload;
@@ -77,8 +81,9 @@ function App(props) {
   const [state, dispatch] = useReducer(reducer, initialState, init);
 
   useEffect(() => {
-    if (state.history.length == 50) {
-      alert('Yo, you should take a break.')
+    if (state.history.length === 50 && !state.hasNagged) {
+      alert('Yo, you should take a break.');
+      dispatch({type: 'eggs:nag'})
     }
 
     localStorage.setItem('state', JSON.stringify(state));
