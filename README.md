@@ -1,3 +1,15 @@
+# Apex Rando
+
+Apex Legends random character selector with player names and counts, history and some really awful PoC stats.
+
+**View live at <http://apex-rando.netlify.com/>**.
+
+# TODO
+
+EVERYTHING BELOW THIS LINE...
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
